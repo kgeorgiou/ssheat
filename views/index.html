@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SSHeat</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico"/>
+
+    <style>
+        @font-face {
+            font-family: bt-mono;
+            /* By Braintree:
+            https://www.braintreepayments.com/blog/our-new-look/ */
+            src: url(fonts/bt_mono_Bold.otf);
+        }
+
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: 'bt-mono', sans-serif;
+        }
+
+        #title {
+            color: #d5d5d5;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2px 4px;
+            text-align: center;
+            font-size: 1.5em;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #title p {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 533px) {
+            #title {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="//libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css"/>
+    <script src="//libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="title">
+        <p>SSH att{empt|ack}s over 30 days on this domain.</p>
+    </div>
+</body>
+
+<footer>
+    <script>
+        function main() {
+            var map = new L.map('map').setView([33, 0], 3);
+
+            L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+            }).addTo(map);
+
+            cartodb.createLayer(map, 'https://kyriakos.cartodb.com/api/v2/viz/856539da-f326-11e5-a590-0ecd1babdde5/viz.json')
+                    .addTo(map)
+                    .on('done', function (layer) {
+                        layer.on('error', function (err) {
+                            cartodb.log.log('error: ' + err);
+                        });
+                    }).on('error', function () {
+                cartodb.log.log("some error occurred");
+            });
+        }
+
+        window.onload = main;
+    </script>
+</footer>
+</html>
